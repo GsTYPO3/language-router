@@ -1,0 +1,7 @@
+plugin.tx_languagerouter_languagerouting = USER_INT
+plugin.tx_languagerouter_languagerouting {
+    userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+    vendorName = NIMIUS
+    extensionName = LanguageRouter
+    pluginName = LanguageRouting
+}

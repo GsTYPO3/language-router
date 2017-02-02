@@ -1,0 +1,14 @@
+{
+	"name": "nimius/langauge-router",
+	"type": "typo3-cms-extension",
+	"description": "Language router",
+	"replace": {
+		"language_router": "self.version",
+		"nimius/language-router": "self.version"
+	},
+	"autoload": {
+		"psr-4": {
+			"NIMIUS\\LanguageRouter\\": "Classes"
+		}
+	}
+}
