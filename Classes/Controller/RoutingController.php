@@ -74,13 +74,8 @@ class RoutingController extends ActionController
                 $address = GeneralUtility::getIndpEnv('REMOTE_ADDR');
             }
             $this->acceptedCountry = strtoupper(geoip_country_code_by_name($address));
-            $this->currentCountry = ConfigurationUtility::getFullTypoScript()['config.']['country'];
-            
+            $this->currentCountry = ConfigurationUtility::getFullTypoScript()['config.']['country'];   
         }
-        
-        // TODO testing
-        $this->acceptedCountry = 'CH';
-        $this->currentCountry = 'CH';
     }
     
     /**
