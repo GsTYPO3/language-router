@@ -13,16 +13,16 @@
  */
 
 $EM_CONF[$_EXTKEY] = [
-	'title' => 'Language router',
-	'description' => 'Routes website visitors based on GeoIP or browser language to configured pages.',
-	'category' => 'fe',
-	'version' => '0.1.0',
-	'state' => 'beta',
-	'author' => 'NIMIUS',
-	'author_email' => 'info@nimius.net',
-	'constraints' => [
-		'depends' => [
-			'typo3' => '7.6.0-7.6.99',
-		],
-	],
+    'title' => 'Language router',
+    'description' => 'Routes website visitors based on GeoIP or browser language to configured pages.',
+    'category' => 'fe',
+    'version' => '0.1.0',
+    'state' => 'beta',
+    'author' => 'NIMIUS',
+    'author_email' => 'info@nimius.net',
+    'constraints' => [
+        'depends' => [
+            'typo3' => '7.6.0-7.6.99',
+        ],
+    ],
 ];
