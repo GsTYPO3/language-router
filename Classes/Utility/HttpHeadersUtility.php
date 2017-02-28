@@ -39,7 +39,7 @@ class HttpHeadersUtility
      * @return array
      */
     public static function getAcceptedLocales()
-    {        
+    {
         $languageString = GeneralUtility::trimExplode(',', GeneralUtility::getIndpEnv('HTTP_ACCEPT_LANGUAGE'));
         $acceptedLocales = array_reduce(
             $languageString,
@@ -78,3 +78,5 @@ class HttpHeadersUtility
         }
         
         return $address;
+    }
+}

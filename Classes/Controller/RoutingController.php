@@ -30,7 +30,7 @@ use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
  * configured detections and routes.
  */
 class RoutingController extends ActionController
-{   
+{
     /**
      * @var int Current sys_language_uid.
      */
@@ -63,7 +63,7 @@ class RoutingController extends ActionController
      * Initializes instance properties for processing actions.
      */
     public function __construct()
-    {   
+    {
         $this->currentPageUid = (int)$GLOBALS['TSFE']->id;
         $this->currentLanguageUid = (int)$GLOBALS['TSFE']->sys_language_uid;
         $this->acceptedLocales = HttpHeadersUtility::getAcceptedLocales();
@@ -73,7 +73,7 @@ class RoutingController extends ActionController
             if ($address) {
                 $this->acceptedCountry = strtoupper(geoip_country_code_by_name($address));
             }
-            $this->currentCountry = ConfigurationUtility::getFullTypoScript()['config.']['country'];   
+            $this->currentCountry = ConfigurationUtility::getFullTypoScript()['config.']['country'];
         }
     }
     
@@ -159,8 +159,8 @@ class RoutingController extends ActionController
      */
     protected function redirectToTarget(array $parameters)
     {
-		$uriBuilder = ObjectUtility::getObjectManager()->get(UriBuilder::class);
-		$uriBuilder
+        $uriBuilder = ObjectUtility::getObjectManager()->get(UriBuilder::class);
+        $uriBuilder
             ->setRequest($this->request)
             ->setCreateAbsoluteUri(false)
             ->setArgumentPrefix(null);
