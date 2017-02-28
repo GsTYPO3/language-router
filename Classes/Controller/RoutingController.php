@@ -165,8 +165,8 @@ class RoutingController extends ActionController
      */
     protected function redirectToTarget(array $parameters)
     {
-        $uriBuilder = ObjectUtility::getObjectManager()->get(UriBuilder::class);
-        $uriBuilder
+		$uriBuilder = ObjectUtility::getObjectManager()->get(UriBuilder::class);
+		$uriBuilder
             ->setRequest($this->request)
             ->setCreateAbsoluteUri(false)
             ->setArgumentPrefix(null);

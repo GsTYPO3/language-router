@@ -83,6 +83,6 @@ Example:
             language = de
             locale_all = de_CH
             country = CH
-            htmlTag_setParams = lang="de" class="lang-de"
+    		htmlTag_setParams = lang="de" class="lang-de"
         }
     [end]
