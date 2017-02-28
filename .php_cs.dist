@@ -19,22 +19,7 @@
  * @see https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/master/UPGRADE.md
  */
 if (class_exists('PhpCsFixer\Finder'))
-{
-    $header = <<<EOF
-/*
- * This file is part of the TYPO3 CMS project.
- *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
- */        
-EOF;
-    
+{    
     $finder = PhpCsFixer\Finder::create()
         ->in(__DIR__)
         ->exclude('.Build')
@@ -59,7 +44,6 @@ EOF;
             'concat_space' => ['spacing' => 'one'],
             'function_typehint_space' => true,
             'hash_to_slash_comment' => true,
-            'header_comment' => ['header' => $header],
             'lowercase_cast' => true,
             'native_function_casing' => true,
             'no_blank_lines_after_phpdoc' => true,

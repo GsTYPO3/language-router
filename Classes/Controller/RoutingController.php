@@ -19,7 +19,6 @@ use NIMIUS\LanguageRouter\Utility\HttpHeadersUtility;
 use NIMIUS\LanguageRouter\Utility\LanguageUtility;
 use NIMIUS\LanguageRouter\Utility\ObjectUtility;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 
@@ -35,28 +34,27 @@ class RoutingController extends ActionController
      * @var int Current sys_language_uid.
      */
     protected $currentLanguageUid;
-    
+
     /**
      * @var int Current page uid.
      */
     protected $currentPageUid;
-    
+
     /**
      * @var string|null Current country, set via config.country.
      */
     protected $currentCountry;
-    
+
     /**
      * @var array Accepted languages from client browser.
      */
     protected $acceptedLocales = [];
-    
+
     /**
      * @var string|null Country from php-geoip, if available.
      */
     protected $acceptedCountry;
-    
-    
+
     /**
      * Class constructor.
      *
@@ -67,7 +65,7 @@ class RoutingController extends ActionController
         $this->currentPageUid = (int)$GLOBALS['TSFE']->id;
         $this->currentLanguageUid = (int)$GLOBALS['TSFE']->sys_language_uid;
         $this->acceptedLocales = HttpHeadersUtility::getAcceptedLocales();
-        
+
         if (function_exists('geoip_country_code_by_name')) {
             $address = HttpHeadersUtility::getRemoteAddress();
             if ($address) {
@@ -76,7 +74,7 @@ class RoutingController extends ActionController
             $this->currentCountry = ConfigurationUtility::getFullTypoScript()['config.']['country'];
         }
     }
-    
+
     /**
      * Process action.
      *
@@ -90,7 +88,7 @@ class RoutingController extends ActionController
         if (empty($configuration) || empty($configuration['routes'])) {
             return '';
         }
-        
+
         foreach ($configuration['routes'] as $route) {
             if ($route['detection'] == 'acceptedLanguages') {
                 foreach ($route['targets'] as $language => $targetParameters) {
@@ -98,7 +96,7 @@ class RoutingController extends ActionController
                     if (!isset($targetParameters['id'])) {
                         $targetParameters['id'] = $this->currentPageUid;
                     }
-                    
+
                     if (array_key_exists($locale, $this->acceptedLocales)) {
                         if (!$this->currentPageMatchesTarget($targetParameters)) {
                             $this->redirectToTarget($targetParameters);
@@ -110,7 +108,7 @@ class RoutingController extends ActionController
                 if (!$this->currentCountry) {
                     continue;
                 }
-                
+
                 foreach ($route['targets'] as $country => $targetParameters) {
                     if (strtoupper($country) == $this->acceptedCountry) {
                         if (
@@ -126,7 +124,7 @@ class RoutingController extends ActionController
         }
         return '';
     }
-    
+
     /**
      * Checks if the current page matches the given target parameters
      * to prevent a redirect loop.
@@ -139,17 +137,17 @@ class RoutingController extends ActionController
     protected function currentPageMatchesTarget(array $parameters)
     {
         $isTarget = false;
-        
+
         if (isset($parameters['L'])) {
             $isTarget = ((int)$parameters['L'] == $this->currentLanguageUid);
         }
         if (isset($parameters['id'])) {
             $isTarget = ((int)$parameters['id'] == $this->currentPageUid);
         }
-        
+
         return $isTarget;
     }
-    
+
     /**
      * Builds an URI from given parameters and redirects to
      * the built URI.
@@ -164,14 +162,14 @@ class RoutingController extends ActionController
             ->setRequest($this->request)
             ->setCreateAbsoluteUri(false)
             ->setArgumentPrefix(null);
-        
+
         if (isset($parameters['id'])) {
             $uriBuilder->setTargetPageUid($parameters['id']);
             unset($parameters['id']);
         } else {
             $uriBuilder->setTargetPageUid($this->currentPageUid);
         }
-        
+
         $uriBuilder->setArguments($parameters);
         $this->redirectToUri($uriBuilder->buildFrontendUri());
     }

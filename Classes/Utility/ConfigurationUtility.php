@@ -75,7 +75,7 @@ class ConfigurationUtility
             $flexFormSettings = (array)$flexFormService->convertFlexFormContentToArray($cObj->data['pi_flexform']);
             $settings = array_merge($settings, (array)$flexFormSettings['settings']);
         }
-        
+
         $typoscriptService = ObjectUtility::getObjectManager()->get(TyposcriptService::class);
         return $typoscriptService->convertTypoScriptArrayToPlainArray($settings);
     }

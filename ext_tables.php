@@ -24,3 +24,6 @@ $l10n = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf:plugi
     'LanguageRouting',
     $l10n . 'languageRouting.title'
 );
+
+// Register status provider for reports module.
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['Language Router'][] = \NIMIUS\LanguageRouter\Report\Status\GeoIpStatus::class;

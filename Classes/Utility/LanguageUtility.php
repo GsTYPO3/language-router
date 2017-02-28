@@ -14,8 +14,6 @@ namespace NIMIUS\LanguageRouter\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * Language utility.
  *
@@ -40,7 +38,7 @@ class LanguageUtility
         } elseif (strlen($input) == 2) {
             $locale = strtolower($input) . '_' . strtoupper($input);
         }
-        
+
         return $locale;
     }
 }
