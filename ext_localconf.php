@@ -13,9 +13,10 @@
  */
 
 if (!defined('TYPO3_MODE')) {
-	die('Access denied.');
+    die('Access denied.');
 }
 
+// Configure 'Language routing' plugin.
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
     'NIMIUS.' . $_EXTKEY,
     'LanguageRouting',
