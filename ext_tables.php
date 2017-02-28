@@ -16,9 +16,11 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-// TODO l10n
+$l10n = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf:plugin.';
+
+// Register 'Language Routing' plugin.
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
     'NIMIUS.' . $_EXTKEY,
     'LanguageRouting',
-    '((Label: Language routing plugin))'
+    $l10n . 'languageRouting.title'
 );
