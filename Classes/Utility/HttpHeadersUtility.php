@@ -57,4 +57,24 @@ class HttpHeadersUtility
         arsort($acceptedLocales);
         return $acceptedLocales;
     }
-}
+    
+    /**
+     * Returns the remote address of the current client,
+     * respecting proxied requests.
+     *
+     * @return string|null
+     */
+    public function getRemoteAddress()
+    {
+        $address = GeneralUtility::getIndpEnv('HTTP_X_FORWARDED_FOR');
+        
+        // In certain situations, getIndpEnv may not return a correct header.
+        if (!$address) {
+            $address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        
+        if (!$address) {
+            $address = GeneralUtility::getIndpEnv('REMOTE_ADDR');
+        }
+        
+        return $address;

@@ -69,11 +69,10 @@ class RoutingController extends ActionController
         $this->acceptedLocales = HttpHeadersUtility::getAcceptedLocales();
         
         if (function_exists('geoip_country_code_by_name')) {
-            $address = GeneralUtility::getIndpEnv('HTTP_X_FORWARDED_FOR');
-            if (!$address) {
-                $address = GeneralUtility::getIndpEnv('REMOTE_ADDR');
+            $address = HttpHeadersUtility::getRemoteAddress();
+            if ($address) {
+                $this->acceptedCountry = strtoupper(geoip_country_code_by_name($address));
             }
-            $this->acceptedCountry = strtoupper(geoip_country_code_by_name($address));
             $this->currentCountry = ConfigurationUtility::getFullTypoScript()['config.']['country'];   
         }
     }
