@@ -64,6 +64,16 @@ user agent language and/or geoip.
     }
 
 
+## Usage
+
+Language router can be used in two ways:
+
+ 1. Include the provided plugin element on a landing page that is intended to redirect your visitors to the correct starting point.
+ 2. Add the plugin via TypoScript
+
+Be aware that the plugin is of type `USER_INT` which leads to the page(s) it is used on being uncached. 
+
+
 ## Detection types.
 
 Language router provides the following detection types:
