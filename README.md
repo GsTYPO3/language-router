@@ -101,3 +101,66 @@ Example:
 ### Detection: fallback
 
 As its name says, it's not a real detection, but a fallback. Use this type of configuration if you need to redirect to a fallback page in case any previous route does not match.
+
+
+## Examples
+
+### Countries with both one or more languages
+
+Assuming the following language configuration:
+
+| Country     | Language | Locale | `sys_language_uid` |
+| ----------- | -------- | ------ | ------------------ |
+| Switzerland | German   | de_CH  | 0                  |
+| Switzerland | French   | fr_CH  | 1                  |
+| Germany     | German   | de_DE  | 2                  |
+| Belgium     | Dutch    | nl_BE  | 3                  |
+| Belgium     | French   | fr_BE  | 4                  |
+| (Any)       | English  | en_EN  | 5                  |
+
+The routes to match the setup from above may look like this:
+
+    plugin.tx_languagerouter.settings {
+        routes {
+          /*
+           * Route by browser language first in order to
+           * handle countries with multiple languages first.
+           *
+           * This only works if the operating system of a visitor
+           * has set the correct locale for the country the
+           * visitor is living in!
+           */
+          1 {
+            detection = acceptedLanguages
+            targets {
+              fr_CH.L = 1
+              fr_BE.L = 4
+            }
+          }
+          
+          /*
+           * Any unmatched routes from the previous
+           * by-browser-language configuration will be
+           * routed by the country they're living in.
+           */
+          2 {
+            detection = country
+            targets {
+              CH.L = 0
+              DE.L = 2
+              BE.L = 3
+            }
+          }
+          
+          /*
+           * If neither the first nor the second rule matched,
+           * a fallback to our logical "default" language is made.
+           */
+          3 {
+            detection = fallback
+            target {
+              L = 5
+            }
+          }
+        }
+      }
