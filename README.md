@@ -96,3 +96,8 @@ Example:
     		htmlTag_setParams = lang="de" class="lang-de"
         }
     [end]
+
+
+### Detection: fallback
+
+As its name says, it's not a real detection, but a fallback. Use this type of configuration if you need to redirect to a fallback page in case any previous route does not match.
