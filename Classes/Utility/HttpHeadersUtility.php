@@ -35,7 +35,7 @@ class HttpHeadersUtility
      *     ["de_DE"]=> float(0.6)
      *     ["fr_FR"]=> float(0.4)
      *   }
-     * @todo TODO move into lang utility
+     *
      * @return array
      */
     public static function getAcceptedLocales()

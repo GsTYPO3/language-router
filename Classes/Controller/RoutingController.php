@@ -80,6 +80,7 @@ class RoutingController extends ActionController
      *
      * Parses TypoScript configuration to check if a redirect needs to happen.
      *
+     * @todo extract processing into separate class which only returns the target params. 
      * @return string An empty string is returned to prevent template rendering.
      */
     public function processAction()
