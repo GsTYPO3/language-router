@@ -71,9 +71,16 @@ Language router provides the following detection types:
 
 ### Detection: acceptedLanguages
 
-The acceptedLanguage detection mode reads the *HTTP_ACCEPT_LANGUAGE* parameter and parses all accepted languages. This parameter usually contains
-one locale (like *de_CH*) and a few language codes that are also supported (like *de*, *en*, *fr*). Language codes are also converted to locales
-(as in *de_DE* for *de*, *en_EN* for *en* and *fr_FR* for *fr*) to have a consistent configuration.
+The acceptedLanguage detection mode reads the `HTTP_ACCEPT_LANGUAGE` parameter and parses all accepted languages. This parameter usually contains
+one locale (like `de_CH`) and a few language codes that are also supported (like `de`, `en`, `fr`). Language codes are also converted to locales
+(as in `de_DE` for `de`, `en_EN` for `en` and `fr_FR` for `fr`) to have a consistent configuration.
+
+**Explanative example**  
+If your operating system has set English as its preferred language, and German as it's second one, your browser may send an `HTTP_ACCEPT_LANGUAGE` header that looks like this: 
+
+    en-US,en;q=0.8,de;q=0.6,fr;q=0.4
+
+This will then process `en_US`, `en_EN`, `de_DE`, `fr_FR`, in this order.
 
 Before any redirect, the current page uid and language parameter is compared to the configured one, in order to not end up in a redirect loop.
 
