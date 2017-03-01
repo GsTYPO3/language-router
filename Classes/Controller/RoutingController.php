@@ -120,6 +120,13 @@ class RoutingController extends ActionController
                         return '';
                     }
                 }
+            } elseif ($route['detection'] == 'fallback') {
+                $targetParameters = $route['target'];
+                if (!isset($targetParameters['id'])) {
+                    $targetParameters['id'] = $this->currentPageUid;
+                }
+                $this->redirectToTarget($targetParameters);
+                return '';
             }
         }
         return '';

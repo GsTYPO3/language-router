@@ -50,6 +50,16 @@ user agent language and/or geoip.
                     de_DE.L = 1
                 }
             }
+            
+            // Third priority: If 1. and 2. don't match anything.
+            3 {
+                detection = fallback
+                
+                // Attention: "No detection" can't have multiple targets, that' why it's "target".
+                target {
+                    L = 23
+                }
+            }
         }
     }
 
