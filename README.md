@@ -87,7 +87,7 @@ Before any redirect, the current page uid and language parameter is compared to 
 
 ### Detection: country
 
-The country detection relies on php-geoip being available. If it is not available, the country detection configuration is being ignored.
+The country detection relies on php-geoip being available. If it is not available, the country detection configuration is being ignored. To get information about whether you can or cannot use this detection type, a status report is provided, which you'll find in the *System > Reports* backend module.
 
 In order to compare the current page's country with the configured one, you must set *config.country* for any language condition block,
 otherwise language router will not know to which country the currently rendered page belongs to, and ends up in a redirect loop.
