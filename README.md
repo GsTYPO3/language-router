@@ -1,5 +1,7 @@
 # Language router
 
+[![Build Status](https://travis-ci.org/nimius/language-router.svg?branch=master)](https://travis-ci.org/nimius/language-router)
+
 A simple extension providing redirects to languages or pages, both for single- and multi-tree setups, based on
 user agent language and/or geoip.
 
