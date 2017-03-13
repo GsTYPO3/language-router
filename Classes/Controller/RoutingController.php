@@ -123,11 +123,12 @@ class RoutingController extends ActionController
 
                 foreach ($route['targets'] as $country => $targetParameters) {
                     if (strtoupper($country) == $this->acceptedCountry) {
-                        if (
-                            !$this->currentPageMatchesTarget($targetParameters)
-                            && $this->currentCountry != $country
-                        ) {
-                            $this->redirectToTarget($targetParameters);
+                        if (!$this->currentPageMatchesTarget($targetParameters)) {
+                            if ($route['excludeFromMatchComparison'] == 'currentCountry') {
+                                $this->redirectToTarget($targetParameters);
+                            } elseif ($this->currentCountry != $country) {
+                                $this->redirectToTarget($targetParameters);
+                            }
                         }
                         return '';
                     }
