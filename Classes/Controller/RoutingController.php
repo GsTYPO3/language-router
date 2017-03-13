@@ -92,8 +92,9 @@ class RoutingController extends ActionController
      */
     public function processAction()
     {
-        if ($this->cookie->get('redirected')) {
-            return '';
+        $configuration = ConfigurationUtility::getTyposcriptConfiguration();
+        if (!(int)$configuration['redirectCookie']['disregard'] && $this->cookie->get('redirected')) {
+          return '';
         }
 
         $configuration = ConfigurationUtility::getTyposcriptConfiguration();

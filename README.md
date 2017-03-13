@@ -8,6 +8,12 @@ user agent language and/or geoip.
 **TypoScript Example**:
 
     plugin.tx_languagerouter.settings {
+        redirectCookie {
+            // Redirect regardless if a redirect has already been made (which sets a cookie).
+            // This is especially useful if you have a visitable landing page that not just redirects.
+            disregard = 1
+        }
+        
         routes {
             // First priority: Route by country, detected from geoIP.
             1 {
