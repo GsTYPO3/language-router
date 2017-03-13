@@ -29,6 +29,11 @@ user agent language and/or geoip.
             2 {
                 // This will return a locale.
                 detection = acceptedLanguages
+                
+                settings {
+                    qualityTreshold = 0.6
+                }
+                
                 targets {
                     // Redirect to our special page (id = 4) in German (L = 1).
                     de_CH {
@@ -92,7 +97,7 @@ If your operating system has set English as its preferred language, and German a
 
     en-US,en;q=0.8,de;q=0.6,fr;q=0.4
 
-This will then process `en_US`, `en_EN`, `de_DE`, `fr_FR`, in this order.
+This will then process `en_US`, `en_EN`, `de_DE`, `fr_FR`, in this order. You can skip languages below a certain quality level by setting `settings.qualityTreshold`.
 
 Before any redirect, the current page uid and language parameter is compared to the configured one, in order to not end up in a redirect loop.
 

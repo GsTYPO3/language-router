@@ -63,6 +63,33 @@ class HttpHeadersUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     }
 
     /**
+     * Test that getAcceptedLocales() does not return languages that are not within threshold.
+     *
+     * @test
+     */
+    public function testGetAcceptedLocalesSkipsLanguagesWhenTresholdIsGiven()
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en,en-US,en-AU;q=0.8,fr;q=0.6,en-GB;q=0.4';
+        $this->assertEquals(
+            [
+                'en_US' => 1.0,
+                'en_EN' => 1.0,
+                'en_AU' => (float)0.8,
+                'fr_FR' => (float)0.6
+            ],
+            HttpHeadersUtility::getAcceptedLocales(0.6)
+        );
+
+        $this->assertEquals(
+            [
+                'en_US' => 1.0,
+                'en_EN' => 1.0
+            ],
+            HttpHeadersUtility::getAcceptedLocales(1.0)
+        );
+    }
+
+    /**
      * Test tear-down.
      *
      * Flushes the internal method caches, as certain methods
