@@ -97,7 +97,6 @@ class RoutingController extends ActionController
           return '';
         }
 
-        $configuration = ConfigurationUtility::getTyposcriptConfiguration();
         if (empty($configuration) || empty($configuration['routes'])) {
             return '';
         }
