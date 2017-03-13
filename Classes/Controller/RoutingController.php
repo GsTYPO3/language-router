@@ -14,6 +14,7 @@ namespace NIMIUS\LanguageRouter\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use NIMIUS\LanguageRouter\Persistence\Cookie;
 use NIMIUS\LanguageRouter\Utility\ConfigurationUtility;
 use NIMIUS\LanguageRouter\Utility\HttpHeadersUtility;
 use NIMIUS\LanguageRouter\Utility\LanguageUtility;
@@ -56,6 +57,12 @@ class RoutingController extends ActionController
     protected $acceptedCountry;
 
     /**
+     * @var \NIMIUS\LanguageRouter\Persistence\Cookie
+     * @inject
+     */
+    protected $cookie;
+
+    /**
      * Class constructor.
      *
      * Initializes instance properties for processing actions.
@@ -80,11 +87,16 @@ class RoutingController extends ActionController
      *
      * Parses TypoScript configuration to check if a redirect needs to happen.
      *
+     * @todo extract processing into separate class which only returns the target params.
      * @return string An empty string is returned to prevent template rendering.
      */
     public function processAction()
     {
         $configuration = ConfigurationUtility::getTyposcriptConfiguration();
+        if (!(int)$configuration['redirectCookie']['disregard'] && $this->cookie->get('redirected')) {
+          return '';
+        }
+
         if (empty($configuration) || empty($configuration['routes'])) {
             return '';
         }
@@ -111,15 +123,23 @@ class RoutingController extends ActionController
 
                 foreach ($route['targets'] as $country => $targetParameters) {
                     if (strtoupper($country) == $this->acceptedCountry) {
-                        if (
-                            !$this->currentPageMatchesTarget($targetParameters)
-                            && $this->currentCountry != $country
-                        ) {
-                            $this->redirectToTarget($targetParameters);
+                        if (!$this->currentPageMatchesTarget($targetParameters)) {
+                            if ($route['excludeFromMatchComparison'] == 'currentCountry') {
+                                $this->redirectToTarget($targetParameters);
+                            } elseif ($this->currentCountry != $country) {
+                                $this->redirectToTarget($targetParameters);
+                            }
                         }
                         return '';
                     }
                 }
+            } elseif ($route['detection'] == 'fallback') {
+                $targetParameters = $route['target'];
+                if (!isset($targetParameters['id'])) {
+                    $targetParameters['id'] = $this->currentPageUid;
+                }
+                $this->redirectToTarget($targetParameters);
+                return '';
             }
         }
         return '';
@@ -152,11 +172,16 @@ class RoutingController extends ActionController
      * Builds an URI from given parameters and redirects to
      * the built URI.
      *
+     * Also sets a cookie that a redirect has happened to
+     * prevent redirect loops.
+     *
      * @param array $parameters
      * @return void
      */
     protected function redirectToTarget(array $parameters)
     {
+        $this->cookie->set('redirected', 1);
+
         $uriBuilder = ObjectUtility::getObjectManager()->get(UriBuilder::class);
         $uriBuilder
             ->setRequest($this->request)

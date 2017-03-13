@@ -35,21 +35,28 @@ class HttpHeadersUtility
      *     ["de_DE"]=> float(0.6)
      *     ["fr_FR"]=> float(0.4)
      *   }
-     * @todo TODO move into lang utility
+     *
+     * @param float $qualityTreshold
      * @return array
      */
-    public static function getAcceptedLocales()
+    public static function getAcceptedLocales($qualityTreshold = null)
     {
         $languageString = GeneralUtility::trimExplode(',', GeneralUtility::getIndpEnv('HTTP_ACCEPT_LANGUAGE'));
         $acceptedLocales = array_reduce(
             $languageString,
-            function ($collection, $part) {
+            function ($collection, $part) use ($qualityTreshold) {
                 list($language, $q) = array_merge(
                     GeneralUtility::trimExplode(';q=', $part),
                     [1]
                 );
+
+                $quality = (float)$q;
+                if ($qualityTreshold && $quality < (float)$qualityTreshold) {
+                    return $collection;
+                }
+
                 $locale = LanguageUtility::convertToLocale($language);
-                $collection[$locale] = (float)$q;
+                $collection[$locale] = $quality;
                 return $collection;
             },
             []
@@ -64,7 +71,7 @@ class HttpHeadersUtility
      *
      * @return string|null
      */
-    public function getRemoteAddress()
+    public static function getRemoteAddress()
     {
         $address = GeneralUtility::getIndpEnv('HTTP_X_FORWARDED_FOR');
 

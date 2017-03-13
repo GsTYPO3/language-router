@@ -1,0 +1,42 @@
+language: php
+sudo: false
+
+matrix:
+  include:
+    - php: 5.5
+      env: TYPO3_VERSION=^7.6.0
+    
+    - php: 5.6
+      env: TYPO3_VERSION=^7.6.0
+    
+    - php: 7.0
+      env: TYPO3_VERSION=^7.6.0
+
+addons:
+  apt:
+    packages:
+      - parallel
+
+cache:
+  directories:
+    - "$HOME/.composer/cache"
+
+notifications:
+  slack:
+    secure: H1o9hlned/WXsZQmC6R+xx1UOfgmHlIcU4qkzGrlKKbQHkoC3UdxCZKJtNpK2IrROWE62tTqXL2HM3phhaphZHwCMmG/7UMeQsnP4cpVKX4FoKZLg5DJ1xQfgjyyA8J961RDe5C1GrUfg5pxK3xw4VT5zO2ATbQuH0Z4L4OnKWcOBmY1PXnzjjfEAcdTz1Cc+N9nO5yWILKOoBxgr7cQ306eulPL2TLnUZqzfxCgnKaZVFHGysITX3uVWJZrmrerLnuDxKGshHt0RZ9TcCgxmzkgB8pqhYQ4f1PbI8mScoLgSwEfMVvDMlOyPRxDs88HYO1URTa7bPT+c1m00TVY8wshcyJ3NqBDY1KpUKbCxgkc6uEWgWmaXi8QZzMFPtT7qJafp6eQlYKkMwrCvUHFqdnV/Fxohh/zC1pwWH4vS2EH74GWGcsYi5E6y9q0SEx4jICPha1oeFsMl4pHazcmaznT4fdEhc1Q/stTAC8npNveB6DZvXkSDaV/UvBxub68Jk6HLAkGsOyk5VhCj2/Yz7cPDINTtXKTTKQ3vSGMUKF/cSjEjasjsECsf/XKqJ41BS6P65kaRmjAc7AynmB0ED+Vb/LcbciqkhVX1WSwaa/9vORI++ofWWgJIjJaKB+LsWfGUcanhVfw3BFEHWgfCHmTzterJF8i90HnjS7LPMg=
+
+before_install:
+  - phpenv config-rm xdebug.ini
+  - composer self-update
+  - composer --version
+
+before_script:
+  - composer require --prefer-source typo3/cms="$TYPO3_VERSION@dev"
+  - git checkout composer.json
+  - export TYPO3_PATH_WEB=$PWD/.Build/Web
+
+script:
+  - >
+    echo;
+    echo "Running unit tests";
+    .Build/bin/phpunit -c .Build/vendor/typo3/cms/typo3/sysext/core/Build/UnitTests.xml Tests/Unit/

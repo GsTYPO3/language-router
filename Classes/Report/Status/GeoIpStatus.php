@@ -65,7 +65,7 @@ class GeoIpStatus implements \TYPO3\CMS\Reports\StatusProviderInterface
             );
         }
     }
-    
+
     public function getGeoIpFunctionsExist()
     {
         if (function_exists('geoip_country_code_by_name')) {
