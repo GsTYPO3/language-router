@@ -71,7 +71,7 @@ class HttpHeadersUtility
      *
      * @return string|null
      */
-    public function getRemoteAddress()
+    public static function getRemoteAddress()
     {
         $address = GeneralUtility::getIndpEnv('HTTP_X_FORWARDED_FOR');
 
