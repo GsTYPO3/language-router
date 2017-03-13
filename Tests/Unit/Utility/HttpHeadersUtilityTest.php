@@ -28,7 +28,7 @@ class HttpHeadersUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      * @test
      */
     public function testGetAcceptedLocalesReturnsArrayWith5CharLocalesByPriority()
-    {   
+    {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en-US,en;q=0.8,de;q=0.6,fr;q=0.4';
         $this->assertEquals(
             [
@@ -40,7 +40,7 @@ class HttpHeadersUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             HttpHeadersUtility::getAcceptedLocales()
         );
     }
-    
+
     /**
      * Test that getAcceptedLocales() returns a precise language first before a "general"
      * one. This means that e.g. 'en,en-US,...' should return en_US first despite 'en' being first.
@@ -61,7 +61,7 @@ class HttpHeadersUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             HttpHeadersUtility::getAcceptedLocales()
         );
     }
-    
+
     /**
      * Test tear-down.
      *
