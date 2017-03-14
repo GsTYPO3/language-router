@@ -27,3 +27,12 @@ if (!defined('TYPO3_MODE')) {
         'Routing' => 'process',
     ]
 );
+
+// Register 'acceptedLanguages' detection.
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['language_router']['classes']['routing']['detection']['acceptedLanguages'] = \NIMIUS\LanguageRouter\Routing\Detection\AcceptedLanguagesDetection::class;
+
+// Register 'country' detection.
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['language_router']['classes']['routing']['detection']['country'] = \NIMIUS\LanguageRouter\Routing\Detection\CountryDetection::class;
+
+// Register 'fallback' detection.
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['language_router']['classes']['routing']['detection']['fallback'] = \NIMIUS\LanguageRouter\Routing\Detection\FallbackDetection::class;
