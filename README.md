@@ -12,6 +12,11 @@ user agent language and/or geoip.
             // Redirect regardless if a redirect has already been made (which sets a cookie).
             // This is especially useful if you have a visitable landing page that not just redirects.
             disregard = 1
+            
+            // Alternatively, setting disregard = 0 (default) but an expiration date, the
+            // cookie will expire after the given amount of seconds, leading to a redirect
+            // each time a cookie is either expired or not set.
+            expirationInSeconds = 21600
         }
         
         routes {

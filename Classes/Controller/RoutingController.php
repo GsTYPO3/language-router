@@ -77,7 +77,13 @@ class RoutingController extends ActionController
         $configuration = ConfigurationUtility::getTyposcriptConfiguration();
         $this->routesProcessor->setConfiguration($configuration);
         if ($this->routesProcessor->process()) {
-            $this->cookie->set('redirected', 1);
+            $expirationInSeconds = (int)$configuration['redirectCookie']['expirationInSeconds'];
+            if ($expirationInSeconds) {
+                $expiration = time() + $expirationInSeconds;
+            } else {
+                $expiration = 0;
+            }
+            $this->cookie->set('redirected', 1, $expiration);
             $this->redirectToTarget($this->routesProcessor->getTargetParameters());
         }
         return '';
