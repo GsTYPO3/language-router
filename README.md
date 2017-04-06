@@ -12,6 +12,11 @@ user agent language and/or geoip.
             // Redirect regardless if a redirect has already been made (which sets a cookie).
             // This is especially useful if you have a visitable landing page that not just redirects.
             disregard = 1
+            
+            // Alternatively, setting disregard = 0 (default) but an expiration date, the
+            // cookie will expire after the given amount of seconds, leading to a redirect
+            // each time a cookie is either expired or not set.
+            expirationInSeconds = 21600
         }
         
         routes {
@@ -194,3 +199,28 @@ The routes to match the setup from above may look like this:
           }
         }
       }
+
+
+## Common errors
+
+Here's a list of common errors experienced when implementing. Please make sure to double-check these before
+filing a bug report.
+
+
+### .htaccess redirects
+
+Using rewrite rules to ensure that an URL contains a language part may break language routing due to the
+rewrite redirecting away from the plugin before it can be executed.
+
+Example:
+
+```
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/en/(.*)$
+RewriteCond %{REQUEST_URI} !^/de/(.*)$
+RewriteCond %{REQUEST_URI} !^/fr/(.*)$
+RewriteRule ^(.*)$ /en/$1 [L,R=301]
+```
+
+If your .htaccess (or NGINX configuration) contains redirects as displayed in the example above, remove them
+and properly configure language routing by e.g. using the `fallback` detection.

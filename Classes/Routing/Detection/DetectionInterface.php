@@ -1,4 +1,6 @@
 <?php
+namespace NIMIUS\LanguageRouter\Routing\Detection;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -12,17 +14,18 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-$EM_CONF[$_EXTKEY] = [
-    'title' => 'Language router',
-    'description' => 'Routes website visitors based on GeoIP or browser language to configured pages.',
-    'category' => 'fe',
-    'version' => '0.4.0',
-    'state' => 'beta',
-    'author' => 'NIMIUS',
-    'author_email' => 'info@nimius.net',
-    'constraints' => [
-        'depends' => [
-            'typo3' => '7.6.0-7.6.99',
-        ],
-    ],
-];
+/**
+ * Interface for detection classes.
+ */
+interface DetectionInterface
+{
+    /**
+     * Executes detection.
+     *
+     * This method runs its detection code and, if
+     * it matches, stores redirect parameters.
+     *
+     * @return bool true if a configuration matches, false otherwise
+     */
+    public function matches();
+}

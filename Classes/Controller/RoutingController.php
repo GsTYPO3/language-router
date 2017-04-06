@@ -14,10 +14,7 @@ namespace NIMIUS\LanguageRouter\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
-use NIMIUS\LanguageRouter\Persistence\Cookie;
 use NIMIUS\LanguageRouter\Utility\ConfigurationUtility;
-use NIMIUS\LanguageRouter\Utility\HttpHeadersUtility;
-use NIMIUS\LanguageRouter\Utility\LanguageUtility;
 use NIMIUS\LanguageRouter\Utility\ObjectUtility;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -57,131 +54,50 @@ class RoutingController extends ActionController
     protected $acceptedCountry;
 
     /**
+     * @var \NIMIUS\LanguageRouter\Routing\RoutesProcessor
+     * @inject
+     */
+    protected $routesProcessor;
+
+    /**
      * @var \NIMIUS\LanguageRouter\Persistence\Cookie
      * @inject
      */
     protected $cookie;
 
     /**
-     * Class constructor.
-     *
-     * Initializes instance properties for processing actions.
-     */
-    public function __construct()
-    {
-        $this->currentPageUid = (int)$GLOBALS['TSFE']->id;
-        $this->currentLanguageUid = (int)$GLOBALS['TSFE']->sys_language_uid;
-        $this->acceptedLocales = HttpHeadersUtility::getAcceptedLocales();
-
-        if (function_exists('geoip_country_code_by_name')) {
-            $address = HttpHeadersUtility::getRemoteAddress();
-            if ($address) {
-                $this->acceptedCountry = strtoupper(geoip_country_code_by_name($address));
-            }
-            $this->currentCountry = ConfigurationUtility::getFullTypoScript()['config.']['country'];
-        }
-    }
-
-    /**
      * Process action.
      *
      * Parses TypoScript configuration to check if a redirect needs to happen.
      *
-     * @todo extract processing into separate class which only returns the target params.
      * @return string An empty string is returned to prevent template rendering.
      */
     public function processAction()
     {
         $configuration = ConfigurationUtility::getTyposcriptConfiguration();
-        if (!(int)$configuration['redirectCookie']['disregard'] && $this->cookie->get('redirected')) {
-          return '';
-        }
-
-        if (empty($configuration) || empty($configuration['routes'])) {
-            return '';
-        }
-
-        foreach ($configuration['routes'] as $route) {
-            if ($route['detection'] == 'acceptedLanguages') {
-                foreach ($route['targets'] as $language => $targetParameters) {
-                    $locale = LanguageUtility::convertToLocale($language);
-                    if (!isset($targetParameters['id'])) {
-                        $targetParameters['id'] = $this->currentPageUid;
-                    }
-
-                    if (array_key_exists($locale, $this->acceptedLocales)) {
-                        if (!$this->currentPageMatchesTarget($targetParameters)) {
-                            $this->redirectToTarget($targetParameters);
-                        }
-                        return '';
-                    }
-                }
-            } elseif ($route['detection'] == 'country') {
-                if (!$this->currentCountry) {
-                    continue;
-                }
-
-                foreach ($route['targets'] as $country => $targetParameters) {
-                    if (strtoupper($country) == $this->acceptedCountry) {
-                        if (!$this->currentPageMatchesTarget($targetParameters)) {
-                            if ($route['excludeFromMatchComparison'] == 'currentCountry') {
-                                $this->redirectToTarget($targetParameters);
-                            } elseif ($this->currentCountry != $country) {
-                                $this->redirectToTarget($targetParameters);
-                            }
-                        }
-                        return '';
-                    }
-                }
-            } elseif ($route['detection'] == 'fallback') {
-                $targetParameters = $route['target'];
-                if (!isset($targetParameters['id'])) {
-                    $targetParameters['id'] = $this->currentPageUid;
-                }
-                $this->redirectToTarget($targetParameters);
-                return '';
+        $this->routesProcessor->setConfiguration($configuration);
+        if ($this->routesProcessor->process()) {
+            $expirationInSeconds = (int)$configuration['redirectCookie']['expirationInSeconds'];
+            if ($expirationInSeconds) {
+                $expiration = time() + $expirationInSeconds;
+            } else {
+                $expiration = 0;
             }
+            $this->cookie->set('redirected', 1, $expiration);
+            $this->redirectToTarget($this->routesProcessor->getTargetParameters());
         }
         return '';
-    }
-
-    /**
-     * Checks if the current page matches the given target parameters
-     * to prevent a redirect loop.
-     *
-     * This only checks for L and id GET parameters!
-     *
-     * @param array $parameters
-     * @return bool
-     */
-    protected function currentPageMatchesTarget(array $parameters)
-    {
-        $isTarget = false;
-
-        if (isset($parameters['L'])) {
-            $isTarget = ((int)$parameters['L'] == $this->currentLanguageUid);
-        }
-        if (isset($parameters['id'])) {
-            $isTarget = ((int)$parameters['id'] == $this->currentPageUid);
-        }
-
-        return $isTarget;
     }
 
     /**
      * Builds an URI from given parameters and redirects to
      * the built URI.
      *
-     * Also sets a cookie that a redirect has happened to
-     * prevent redirect loops.
-     *
      * @param array $parameters
      * @return void
      */
     protected function redirectToTarget(array $parameters)
     {
-        $this->cookie->set('redirected', 1);
-
         $uriBuilder = ObjectUtility::getObjectManager()->get(UriBuilder::class);
         $uriBuilder
             ->setRequest($this->request)
