@@ -55,9 +55,12 @@ abstract class AbstractDetection
     public function getCurrentPageUid()
     {
         if ($this->configuration['compareParametersFrom'] == 'GET') {
-            return GeneralUtility::_GET('id');
+            $id = GeneralUtility::_GET('id');
+            if (isset($id)) {
+                return (int)$id;
+            }
         } else {
-            return $GLOBALS['TSFE']->id;
+            return (int)$GLOBALS['TSFE']->id;
         }
     }
 
@@ -74,9 +77,12 @@ abstract class AbstractDetection
     public function getCurrentLanguageUid()
     {
         if ($this->configuration['compareParametersFrom'] == 'GET') {
-            return GeneralUtility::_GET('L');
+            $l = GeneralUtility::_GET('L');
+            if (isset($l)) {
+                return (int)$l;
+            }
         } else {
-            return $GLOBALS['TSFE']->id;
+            return (int)$GLOBALS['TSFE']->sys_language_uid;
         }
     }
 
@@ -104,10 +110,10 @@ abstract class AbstractDetection
         $isTarget = false;
 
         if (isset($parameters['L'])) {
-            $isTarget = ((int)$parameters['L'] == $this->getCurrentLanguageUid());
+            $isTarget = ((int)$parameters['L'] === $this->getCurrentLanguageUid());
         }
         if (isset($parameters['id'])) {
-            $isTarget = ((int)$parameters['id'] == $this->getCurrentPageUid());
+            $isTarget = ((int)$parameters['id'] === $this->getCurrentPageUid());
         }
 
         return $isTarget;
