@@ -83,7 +83,7 @@ class RoutingController extends ActionController
             $uriBuilder->setTargetPageUid($parameters['id']);
             unset($parameters['id']);
         } else {
-            $uriBuilder->setTargetPageUid($this->getCurrentPageUid());
+            $uriBuilder->setTargetPageUid($GLOBALS['TSFE']->id);
         }
 
         $uriBuilder->setArguments($parameters);

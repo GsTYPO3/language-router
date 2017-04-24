@@ -14,6 +14,8 @@ namespace NIMIUS\LanguageRouter\Routing\Detection;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Abstract detection class.
  */
@@ -25,30 +27,9 @@ abstract class AbstractDetection
     protected $configuration = [];
 
     /**
-     * @var int Current page uid.
-     */
-    protected $currentPageUid;
-
-    /**
-     * @var int Current sys_language_uid.
-     */
-    protected $currentLanguageUid;
-
-    /**
      * @var array
      */
     protected $targetParameters = [];
-
-    /**
-     * Class constructor.
-     *
-     * Prepares instance properties.
-     */
-    public function __construct()
-    {
-        $this->currentPageUid = (int)$GLOBALS['TSFE']->id;
-        $this->currentLanguageUid = (int)$GLOBALS['TSFE']->sys_language_uid;
-    }
 
     /**
      * Set configuration for detection.
@@ -59,6 +40,44 @@ abstract class AbstractDetection
     public function setConfiguration(array $configuration)
     {
         $this->configuration = $configuration;
+    }
+
+    /**
+     * Getter for the current page uid.
+     *
+     * Returns the parameter from either TSFE or the GET parameter,
+     * based on configuration. TSFE will always contain a value even
+     * if no GET param is given, which can be a behavior that does
+     * not meet implementation requirements.
+     *
+     * @return int|null
+     */
+    public function getCurrentPageUid()
+    {
+        if ($this->configuration['compareParametersFrom'] == 'GET') {
+            return GeneralUtility::_GET('id');
+        } else {
+            return $GLOBALS['TSFE']->id;
+        }
+    }
+
+    /**
+     * Getter for the current language uid.
+     *
+     * Returns the parameter from either TSFE or the GET parameter,
+     * based on configuration. TSFE will always contain a value even
+     * if no GET param is given, which can be a behavior that does
+     * not meet implementation requirements.
+     *
+     * @return int|null
+     */
+    public function getCurrentLanguageUid()
+    {
+        if ($this->configuration['compareParametersFrom'] == 'GET') {
+            return GeneralUtility::_GET('L');
+        } else {
+            return $GLOBALS['TSFE']->id;
+        }
     }
 
     /**
@@ -85,10 +104,10 @@ abstract class AbstractDetection
         $isTarget = false;
 
         if (isset($parameters['L'])) {
-            $isTarget = ((int)$parameters['L'] == $this->currentLanguageUid);
+            $isTarget = ((int)$parameters['L'] == $this->getCurrentLanguageUid());
         }
         if (isset($parameters['id'])) {
-            $isTarget = ((int)$parameters['id'] == $this->currentPageUid);
+            $isTarget = ((int)$parameters['id'] == $this->getCurrentPageUid());
         }
 
         return $isTarget;

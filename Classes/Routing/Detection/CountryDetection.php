@@ -47,7 +47,6 @@ class CountryDetection extends AbstractDetection implements DetectionInterface
      */
     public function __construct()
     {
-        parent::__construct();
         if (function_exists('geoip_country_code_by_name')) {
             $address = HttpHeadersUtility::getRemoteAddress();
             if ($address) {

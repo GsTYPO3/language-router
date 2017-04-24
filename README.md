@@ -24,6 +24,10 @@ user agent language and/or geoip.
             1 {
                 // This will return a 2-char country code.
                 detection = country
+                
+                // Use GET parameters instead of TSFE values to compare current state.
+                compareParametersFrom = GET
+                
                 targets {
                     // Redirect to the current page with L = 1.
                     DE.L = 1
@@ -136,6 +140,17 @@ Example:
 ### Detection: fallback
 
 As its name says, it's not a real detection, but a fallback. Use this type of configuration if you need to redirect to a fallback page in case any previous route does not match.
+
+
+## Detection configurations
+
+Configuration directives inside `plugin.tx_languagerouter.settings.routes.<n>`:
+
+### compareParametersFrom
+
+Possible values: `GET`, `TSFE` (default)
+
+Defines from where parameters for comparing the current state are taken from. TSFE always has values whereas GET may not (e.g. for new visits to the root page). This is handy if you always want to redirect if no GET params are present to ensure that e.g. the language param is always present.
 
 
 ## Examples

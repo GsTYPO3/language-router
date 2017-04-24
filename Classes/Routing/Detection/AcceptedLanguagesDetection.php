@@ -41,7 +41,6 @@ class AcceptedLanguagesDetection extends AbstractDetection implements DetectionI
      */
     public function __construct()
     {
-        parent::__construct();
         $this->acceptedLocales = HttpHeadersUtility::getAcceptedLocales();
     }
 
