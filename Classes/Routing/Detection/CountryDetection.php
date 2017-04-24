@@ -66,11 +66,10 @@ class CountryDetection extends AbstractDetection implements DetectionInterface
         if (!$this->currentCountry) {
             return false;
         }
-
         foreach ($this->configuration['targets'] as $country => $targetParameters) {
             if (strtoupper($country) == $this->acceptedCountry) {
                 if (!$this->currentPageMatchesTarget($targetParameters)) {
-                    if ($route['excludeFromMatchComparison'] == 'currentCountry') {
+                    if ($this->configuration['excludeFromMatchComparison'] == 'currentCountry') {
                         $this->targetParameters = $targetParameters;
                         return true;
                     } elseif ($this->currentCountry != $country) {
