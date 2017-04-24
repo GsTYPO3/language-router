@@ -29,31 +29,6 @@ use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 class RoutingController extends ActionController
 {
     /**
-     * @var int Current sys_language_uid.
-     */
-    protected $currentLanguageUid;
-
-    /**
-     * @var int Current page uid.
-     */
-    protected $currentPageUid;
-
-    /**
-     * @var string|null Current country, set via config.country.
-     */
-    protected $currentCountry;
-
-    /**
-     * @var array Accepted languages from client browser.
-     */
-    protected $acceptedLocales = [];
-
-    /**
-     * @var string|null Country from php-geoip, if available.
-     */
-    protected $acceptedCountry;
-
-    /**
      * @var \NIMIUS\LanguageRouter\Routing\RoutesProcessor
      * @inject
      */
@@ -108,7 +83,7 @@ class RoutingController extends ActionController
             $uriBuilder->setTargetPageUid($parameters['id']);
             unset($parameters['id']);
         } else {
-            $uriBuilder->setTargetPageUid($this->currentPageUid);
+            $uriBuilder->setTargetPageUid($this->getCurrentPageUid());
         }
 
         $uriBuilder->setArguments($parameters);
