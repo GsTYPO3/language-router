@@ -20,7 +20,7 @@ user agent language and/or geoip.
         }
         
         prevention {
-            // Prevents routing if one of the folling GET parameters is present
+            // Prevents routing if one of the following GET parameters is present.
             getParameters = tx_myext_myplugin, tx_myext_myplugin2
         }
         

@@ -109,7 +109,7 @@ class RoutesProcessor
         if (count($preventionParameters)) {
             foreach ($preventionParameters as $parameter) {
                 if (GeneralUtility::_GET($parameter)) {
-                    return false;
+                    return true;
                 }
             }
         }
