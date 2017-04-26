@@ -15,6 +15,7 @@ namespace NIMIUS\LanguageRouter\Routing;
  */
 
 use NIMIUS\LanguageRouter\Factory\DetectionFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Routes processor.
@@ -60,11 +61,18 @@ class RoutesProcessor
      */
     public function process()
     {
+        // Do not route if no configuration is present.
         if (empty($this->routingConfiguration) || empty($this->routingConfiguration['routes'])) {
             return false;
         }
 
+        // Do not route a redirect cookie is present and should be respected.
         if (!(int)$this->routingConfiguration['redirectCookie']['disregard'] && $this->cookie->get('redirected')) {
+            return false;
+        }
+
+        // Do not route if params are present that should prevent routing.
+        if ($this->preventionParametersPreventRouting()) {
             return false;
         }
 
@@ -88,5 +96,23 @@ class RoutesProcessor
     public function getTargetParameters()
     {
         return $this->targetParameters;
+    }
+
+    /**
+     * Check if configured routing prevention parameters should prevent routing.
+     *
+     * @return bool
+     */
+    protected function preventionParametersPreventRouting()
+    {
+        $preventionParameters = GeneralUtility::trimExplode(',', $this->routingConfiguration['prevention']['getParameters'], true);
+        if (count($preventionParameters)) {
+            foreach ($preventionParameters as $parameter) {
+                if (GeneralUtility::_GET($parameter)) {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 }

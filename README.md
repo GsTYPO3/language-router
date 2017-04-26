@@ -19,6 +19,11 @@ user agent language and/or geoip.
             expirationInSeconds = 21600
         }
         
+        prevention {
+            // Prevents routing if one of the folling GET parameters is present
+            getParameters = tx_myext_myplugin, tx_myext_myplugin2
+        }
+        
         routes {
             // First priority: Route by country, detected from geoIP.
             1 {
