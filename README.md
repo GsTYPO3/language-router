@@ -1,5 +1,7 @@
 # Language router
 
+**THIS EXTENSION IS NOT MAINTAINED ANYMORE!** We do not provide support for this code anymore. If you want to take over this project, feel free to fork or re-upload it under your own namespace.
+
 [![Build Status](https://travis-ci.org/nimius/language-router.svg?branch=master)](https://travis-ci.org/nimius/language-router)
 
 A simple extension providing redirects to languages or pages, both for single- and multi-tree setups, based on
@@ -12,13 +14,13 @@ user agent language and/or geoip.
             // Redirect regardless if a redirect has already been made (which sets a cookie).
             // This is especially useful if you have a visitable landing page that not just redirects.
             disregard = 1
-            
+
             // Alternatively, setting disregard = 0 (default) but an expiration date, the
             // cookie will expire after the given amount of seconds, leading to a redirect
             // each time a cookie is either expired or not set.
             expirationInSeconds = 21600
         }
-        
+
         routes {
             // First priority: Route by country, detected from geoIP.
             1 {
@@ -27,7 +29,7 @@ user agent language and/or geoip.
                 targets {
                     // Redirect to the current page with L = 1.
                     DE.L = 1
-                    
+
                     // Redirect to our special page (id = 13) in default language (L = 0) to choose country language.
                     CH {
                         L = 0
@@ -35,44 +37,44 @@ user agent language and/or geoip.
                     }
                 }
             }
-            
+
             // Second priority: Route by browser language
             2 {
                 // This will return a locale.
                 detection = acceptedLanguages
-                
+
                 settings {
                     qualityTreshold = 0.6
                 }
-                
+
                 targets {
                     // Redirect to our special page (id = 4) in German (L = 1).
                     de_CH {
                         L = 1
                         id = 4
                     }
-                    
+
                     // Redirect to our special page (id = 4) in French (L = 2).
                     fr_CH {
                         L = 2
                         id = 4
                     }
-                    
+
                     // Redirect to our special page (id = 4) in Italian (L = 3).
                     it_CH {
                         L = 3
                         id = 4
                     }
-                    
+
                     // Fallback and general German language: Redirect to the current page with L = 1.
                     de_DE.L = 1
                 }
             }
-            
+
             // Third priority: If 1. and 2. don't match anything.
             3 {
                 detection = fallback
-                
+
                 // Attention: "No detection" can't have multiple targets, that' why it's "target".
                 target {
                     L = 23
@@ -89,7 +91,7 @@ Language router can be used in two ways:
  1. Include the provided plugin element on a landing page that is intended to redirect your visitors to the correct starting point.
  2. Add the plugin via TypoScript
 
-Be aware that the plugin is of type `USER_INT` which leads to the page(s) it is used on being uncached. 
+Be aware that the plugin is of type `USER_INT` which leads to the page(s) it is used on being uncached.
 
 
 ## Detection types.
@@ -104,7 +106,7 @@ one locale (like `de_CH`) and a few language codes that are also supported (like
 (as in `de_DE` for `de`, `en_EN` for `en` and `fr_FR` for `fr`) to have a consistent configuration.
 
 **Explanative example**  
-If your operating system has set English as its preferred language, and German as it's second one, your browser may send an `HTTP_ACCEPT_LANGUAGE` header that looks like this: 
+If your operating system has set English as its preferred language, and German as it's second one, your browser may send an `HTTP_ACCEPT_LANGUAGE` header that looks like this:
 
     en-US,en;q=0.8,de;q=0.6,fr;q=0.4
 
@@ -172,7 +174,7 @@ The routes to match the setup from above may look like this:
               fr_BE.L = 4
             }
           }
-          
+
           /*
            * Any unmatched routes from the previous
            * by-browser-language configuration will be
@@ -186,7 +188,7 @@ The routes to match the setup from above may look like this:
               BE.L = 3
             }
           }
-          
+
           /*
            * If neither the first nor the second rule matched,
            * a fallback to our logical "default" language is made.
